@@ -1,0 +1,28 @@
+{
+    "name": "Dispatch",
+    "private": true,
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "mode": "development",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "webpack --watch --mode=development"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@babel/core": "^7.3.4",
+        "@babel/preset-env": "^7.3.4",
+        "@babel/preset-react": "^7.0.0",
+        "babel-loader": "^8.0.5",
+        "simplex-noise": "^2.4.0",
+        "three": "^0.103.0",
+        "three-orbitcontrols": "^2.102.1"
+    },
+    "engines": {
+        "npm": "6.4.1",
+        "node": "10.13.0"
+    }
+}
