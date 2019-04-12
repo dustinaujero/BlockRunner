@@ -1,57 +1,4 @@
 
-// document.addEventListener("DOMContentLoaded", () => {
-
-//     var keyboard = {};
-
-//     var scene = new THREE.Scene();
-//     var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-
-//     var renderer = new THREE.WebGLRenderer();
-//     renderer.setSize(window.innerWidth, window.innerHeight);
-//     document.body.appendChild(renderer.domElement);
-
-
-
-//     var geometry = new THREE.BoxGeometry(1, 1, 1);
-//     var material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-//     var cube = new THREE.Mesh(geometry, material);
-//     scene.add(cube);
-
-//     camera.position.z = 5;
-
-//     function animate() {
-//         requestAnimationFrame(animate);
-
-//         cube.rotation.x += 0.01;
-//         cube.rotation.y += 0.01;
-//         if(keyboard[37]) {
-//             console.log("LEFT")
-//             cube.rotation.y -= Math.PI * 0.6;
-//         }
-//         if(keyboard[39]) {
-//             console.log("RIGHT")
-//             cube.rotation.y += Math.PI * 0.6;
-//         }
-//         renderer.render(scene, camera);
-//     }
-//     function onWindowResize() {
-//         camera.aspect = window.innerWidth / window.innerHeight;
-//         camera.updateProjectionMatrix();
-//         renderer.setSize(window.innerWidth, window.innerHeight);
-//     }
-//     function keydown(e) {
-//         keyboard[event.keycode] = true;
-//     }
-//     function keyup(e) {
-//         keyboard[event.keycode] = false;
-//     }
-
-//     window.addEventListener('keydown', keydown);
-//     window.addEventListener('keyup', keyup);
-//     animate();
-
-// });
-
 // import SimplexNoise from 'simplex-noise';
 // import * as THREE from 'three';
 
@@ -160,17 +107,21 @@
 
 
 document.addEventListener("DOMContentLoaded", () => {
-    var scene, camera, renderer, cube, floor;
+    var scene, camera, renderer, cube, floor, spotLight;
     var cubeDY, cubeDX;
     var keyboard = {};
-
+    var cubes = []
     const init = () => {
 
         scene = new THREE.Scene();
         camera = new THREE.PerspectiveCamera(50, 1200/720, 0.1, 1000);
 
+
+        camera.position.set(0,3, 20);
+        camera.lookAt(new THREE.Vector3(0,0,0));
+
         const shape = new THREE.BoxGeometry(0.5, 0.5, 0.5);
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: false });
+        const material = new THREE.MeshStandardMaterial({ color: 0xffffff});
         cube = new THREE.Mesh(shape, material);
 
         cube.position.set(0, -1.5, 0);
@@ -178,37 +129,41 @@ document.addEventListener("DOMContentLoaded", () => {
         cube.receiveShadow = true;
         scene.add(cube);
 
-        camera.position.set(0,3, 10);
-        camera.lookAt(new THREE.Vector3(0,0,0));
+       
 
         const floor = new THREE.Mesh(
-            new THREE.PlaneGeometry(15, 70), new THREE.MeshBasicMaterial({ color: 0xC8C8C8, wireframe: false })
+            new THREE.PlaneGeometry(15, 150), new THREE.MeshStandardMaterial({ color: 0xC8C8C8 })
         );
         floor.rotation.x -= Math.PI / 2;
         floor.position.set(0, -3.1, 0);
+        floor.receiveShadow = true;
+        floor.castShadow = true;
         scene.add(floor);
 
-        // let ambientLight = new THREE.AmbientLight(0xffffff, 1, 0, Math.PI/2, 0, 1);
-        // scene.add(ambientLight);
+        let ambientLight = new THREE.AmbientLight(0xffffff, 1, 0, 0.1, 0, 1);
+        scene.add(ambientLight);
 
-        let spotLight = new THREE.SpotLight(0xffffff);
-        spotLight.position.set(0, 8, 0);
+        spotLight = new THREE.SpotLight(0xffffff, 50, 0, 0.3, 0, 1);
+        spotLight.position.set(0, 5, 15);
         
         spotLight.castShadow = true;
-        spotLight.angle = Math.PI/2;
         spotLight.shadow.mapSize.width = 1024;
         spotLight.shadow.mapSize.height = 1024;
 
 
 
-        spotLight.shadow.camera.near = -0.1;
+        spotLight.shadow.camera.near = 0.0;
         spotLight.shadow.camera.far = -4000;
-        spotLight.shadow.camera.fov = 90;
-        spotLight.shadow.camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+        spotLight.lookAt(new THREE.Vector3(0, 5, 0));
         let helper = new THREE.SpotLightHelper( spotLight );
         scene.add(helper);
         scene.add(spotLight);
 
+        // var light = new THREE.PointLight(0xffffff, 1, 100);
+        // light.position.set(0, 0, 0);
+        // scene.add(light);
+0
 
         cubeDY = 0;
         cubeDX = 0;
@@ -227,9 +182,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (cube.position.y < -3) {
             cube.position.y = -2.3;
         }
-        // cube.rotation.x += 0.01;
-        // cube.rotation.y += 0.01;
-        
         if(keyboard[37]) { //LEFT
             if(cube.position.x >= -6) {
                 // cube.position.x -= 0.3;
@@ -256,7 +208,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 // cubeDY = 1;
             }
         }
-        cubeDY -= 0.008;
+        renderNewCube();
+        cubeDY -= 0.009;
         cubeDX *= 0.9;
         if (cube.position.y >= -2.5) {
             cube.position.y += cubeDY;
@@ -265,21 +218,34 @@ document.addEventListener("DOMContentLoaded", () => {
         camera.position.x = cube.position.x * 0.2;
         camera.position.y = cube.position.y * 0.4 + 5;
 
+
         renderer.render(scene, camera)
     }
 
-    const keyDown = (e) => {
-        keyboard[e.keyCode] = true;
-    }
-    const keyUp= (e) => {
-        // if ((e.keyCode === 38)) {
-
-        // }
-        // else {
-            keyboard[e.keyCode] = false;
-        // }
+    const renderNewCube = () => {
         
     }
+
+
+
+
+
+
+
+
+
+    // const keyDown = (e) => {
+    //     keyboard[e.keyCode] = true;
+    // }
+    // const keyUp= (e) => {
+    //     // if ((e.keyCode === 38)) {
+
+    //     // }
+    //     // else {
+    //         keyboard[e.keyCode] = false;
+    //     // }
+        
+    // }
     window.addEventListener('keydown', keyDown);
     window.addEventListener('keyup', keyUp);
 
