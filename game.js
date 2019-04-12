@@ -156,13 +156,9 @@ document.addEventListener("DOMContentLoaded", () => {
         spotLight.shadow.camera.far = -4000;
 
         spotLight.lookAt(new THREE.Vector3(0, 5, 0));
-        let helper = new THREE.SpotLightHelper( spotLight );
-        scene.add(helper);
+
         scene.add(spotLight);
 
-        // var light = new THREE.PointLight(0xffffff, 1, 100);
-        // light.position.set(0, 0, 0);
-        // scene.add(light);
 0
 
         cubeDY = 0;
@@ -223,7 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const renderNewCube = () => {
-        
+
     }
 
 
@@ -246,8 +242,8 @@ document.addEventListener("DOMContentLoaded", () => {
     //     // }
         
     // }
-    window.addEventListener('keydown', keyDown);
-    window.addEventListener('keyup', keyUp);
+    // window.addEventListener('keydown', keyDown);
+    // window.addEventListener('keyup', keyUp);
 
     init();
 })
