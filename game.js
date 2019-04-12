@@ -109,16 +109,19 @@
 document.addEventListener("DOMContentLoaded", () => {
     var scene, camera, renderer, cube, floor, spotLight;
     var cubeDY, cubeDX;
+    var frame;
     var keyboard = {};
-    var cubes = []
+    var cubes = [];
+    var counter = 0;
     const init = () => {
 
         scene = new THREE.Scene();
         camera = new THREE.PerspectiveCamera(50, 1200/720, 0.1, 1000);
+        frame = 0;
 
-
-        camera.position.set(0,3, 20);
-        camera.lookAt(new THREE.Vector3(0,0,0));
+        camera.position.set(0, 5, 10);
+        // camera.lookAt(new THREE.Vector3(0,-5, -5));
+        camera.lookAt(new THREE.Vector3(0, -20, -100));
 
         const shape = new THREE.BoxGeometry(0.5, 0.5, 0.5);
         const material = new THREE.MeshStandardMaterial({ color: 0xffffff});
@@ -127,6 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
         cube.position.set(0, -1.5, 0);
         cube.castShadow = true;
         cube.receiveShadow = true;
+        
         scene.add(cube);
 
        
@@ -159,8 +163,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         scene.add(spotLight);
 
-0
-
         cubeDY = 0;
         cubeDX = 0;
         renderer = new THREE.WebGLRenderer();
@@ -175,6 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const animate = () => {
         requestAnimationFrame(animate);
+        
         if (cube.position.y < -3) {
             cube.position.y = -2.3;
         }
@@ -204,7 +207,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 // cubeDY = 1;
             }
         }
-        renderNewCube();
+        // if (counter % 5 === 0) {
+        //     renderNewCube();
+        // }
+        if (++frame % 10 == 0) {
+            renderNewCube();
+            renderNewCube2();
+        }
+
+
+
+
+
         cubeDY -= 0.009;
         cubeDX *= 0.9;
         if (cube.position.y >= -2.5) {
@@ -213,37 +227,51 @@ document.addEventListener("DOMContentLoaded", () => {
         cube.position.x += cubeDX;
         camera.position.x = cube.position.x * 0.2;
         camera.position.y = cube.position.y * 0.4 + 5;
-
-
-        renderer.render(scene, camera)
+        cubes.forEach( cube => {
+            if(cube.position.z >= 10) {
+                scene.remove(cube)
+            } else {
+                cube.position.z += 0.5;
+            }
+        });
+        
+        renderer.render(scene, camera);
     }
 
     const renderNewCube = () => {
 
+        const shape = new THREE.BoxGeometry(1, 1, 1);
+        const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        const box = new THREE.Mesh(shape, material);
+        cubes.push(box);
+        const xCord = (Math.random() * 12) - 6;
+        box.position.set(xCord, -1.5, -50);
+        box.castShadow = true;
+        box.receiveShadow = true;
+        scene.add(box);
+    }
+    const renderNewCube2 = () => {
+
+        const shape = new THREE.BoxGeometry(1, 1, 1);
+        const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        const box = new THREE.Mesh(shape, material);
+        cubes.push(box);
+        const xCord = (Math.random() * 12) - 6;
+        box.position.set(xCord, 0, -50);
+        box.castShadow = true;
+        box.receiveShadow = true;
+        scene.add(box);
     }
 
 
-
-
-
-
-
-
-
-    // const keyDown = (e) => {
-    //     keyboard[e.keyCode] = true;
-    // }
-    // const keyUp= (e) => {
-    //     // if ((e.keyCode === 38)) {
-
-    //     // }
-    //     // else {
-    //         keyboard[e.keyCode] = false;
-    //     // }
-        
-    // }
-    // window.addEventListener('keydown', keyDown);
-    // window.addEventListener('keyup', keyUp);
+    const keyDown = (e) => {
+        keyboard[e.keyCode] = true;
+    }
+    const keyUp= (e) => {
+        keyboard[e.keyCode] = false;
+    }
+    window.addEventListener('keydown', keyDown);
+    window.addEventListener('keyup', keyUp);
 
     init();
 })
