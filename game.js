@@ -136,13 +136,37 @@ document.addEventListener("DOMContentLoaded", () => {
        
 
         const floor = new THREE.Mesh(
-            new THREE.PlaneGeometry(15, 150), new THREE.MeshStandardMaterial({ color: 0xC8C8C8 })
+            new THREE.PlaneGeometry(15, 250), new THREE.MeshStandardMaterial({ color: 0xC8C8C8 })
         );
         floor.rotation.x -= Math.PI / 2;
         floor.position.set(0, -3.1, 0);
         floor.receiveShadow = true;
         floor.castShadow = true;
         scene.add(floor);
+
+
+        const rightWall = new THREE.Mesh(
+            new THREE.PlaneGeometry(15, 250), new THREE.MeshStandardMaterial({ color: 0xffffff, wireframe: false})
+        );
+        rightWall.rotation.x -= Math.PI / 2;
+        rightWall.rotation.y -= Math.PI / 2;
+        rightWall.position.set(7, -2, 0);
+        rightWall.receiveShadow = true;
+        rightWall.castShadow = true;
+        scene.add(rightWall);
+
+
+        const leftWall = new THREE.Mesh(
+            new THREE.PlaneGeometry(15, 250), new THREE.MeshStandardMaterial({ color: 0xC8C8C8, wireframe: false})
+        );
+        leftWall.rotation.x -= Math.PI / 2;
+        leftWall.rotation.y += Math.PI / 2;
+        leftWall.position.set(-7, -2, 0);
+        leftWall.receiveShadow = true;
+        leftWall.castShadow = true;
+        scene.add(leftWall);
+
+
 
         let ambientLight = new THREE.AmbientLight(0xffffff, 1, 0, 0.1, 0, 1);
         scene.add(ambientLight);
@@ -213,6 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (++frame % 10 == 0) {
             renderNewCube();
             renderNewCube2();
+            renderBar();
         }
 
 
@@ -226,9 +251,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         cube.position.x += cubeDX;
         camera.position.x = cube.position.x * 0.2;
-        camera.position.y = cube.position.y * 0.4 + 5;
+        camera.position.y = cube.position.y * 0.4 ;
         cubes.forEach( cube => {
-            if(cube.position.z >= 10) {
+            if(cube.position.z >= 5) {
                 scene.remove(cube)
             } else {
                 cube.position.z += 0.5;
@@ -245,7 +270,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const box = new THREE.Mesh(shape, material);
         cubes.push(box);
         const xCord = (Math.random() * 12) - 6;
-        box.position.set(xCord, -1.5, -50);
+        box.position.set(xCord, -2.5, -50);
         box.castShadow = true;
         box.receiveShadow = true;
         scene.add(box);
@@ -262,7 +287,19 @@ document.addEventListener("DOMContentLoaded", () => {
         box.receiveShadow = true;
         scene.add(box);
     }
-
+    const renderBar = () => {
+        if (Math.random() >= 0.93) {
+            const shape = new THREE.BoxGeometry(10, 1, 1);
+            const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+            const box = new THREE.Mesh(shape, material);
+            cubes.push(box);
+            const xCord = (Math.random() * 12) - 6;
+            box.position.set(xCord, -1.5, -50);
+            box.castShadow = true;
+            box.receiveShadow = true;
+            scene.add(box);
+        }
+    }
 
     const keyDown = (e) => {
         keyboard[e.keyCode] = true;
