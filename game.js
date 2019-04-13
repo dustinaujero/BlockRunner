@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         camera.position.set(0, 5, 10);
         // camera.lookAt(new THREE.Vector3(0,-5, -5));
-        camera.lookAt(new THREE.Vector3(0, -20, -100));
+        // camera.lookAt(new THREE.Vector3(0, -20, -100));
 
         const shape = new THREE.BoxGeometry(0.5, 0.5, 0.5);
         const material = new THREE.MeshStandardMaterial({ color: 0xffffff});
@@ -207,13 +207,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         if(keyboard[37]) { //LEFT
             if(cube.position.x >= -6) {
-                // cube.position.x -= 0.3;
                 cubeDX -= 0.025;
             }
         }
         if (keyboard[39]) { //RIGHT
             if (cube.position.x <= 6) {
-                // cube.position.x += 0.3;
                 cubeDX += 0.025;
             }
         }
@@ -222,18 +220,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 cube.position.y += 0.3;
                 cubeDY = 0.1;
             }
-            // cube.position.y +=
-            // keyboard[38] = false;
         }
         if (keyboard[40]) { //DOWN
             if (cube.position.y >= -2.5) {
-                // cube.position.y -= 0.3;
-                // cubeDY = 1;
             }
         }
-        // if (counter % 5 === 0) {
-        //     renderNewCube();
-        // }
         if (++frame % 10 == 0) {
             renderNewCube();
             renderNewCube2();
@@ -252,6 +243,18 @@ document.addEventListener("DOMContentLoaded", () => {
         cube.position.x += cubeDX;
         camera.position.x = cube.position.x * 0.2;
         camera.position.y = cube.position.y * 0.4 ;
+        var originPoint = cube.position.clone();
+        for (var vertexIndex = 0; vertexIndex < cube.geometry.vertices.length; vertexIndex++) {
+            var localVertex = cube.geometry.vertices[vertexIndex].clone();
+            var globalVertex = localVertex.applyMatrix4(cube.matrix);
+            var directionVector = globalVertex.sub(cube.position);
+
+            var ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
+            var collisionResults = ray.intersectObjects(cubes);
+            if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length())
+                console.log("hit");
+        }
+
         cubes.forEach( cube => {
             if(cube.position.z >= 5) {
                 scene.remove(cube)
