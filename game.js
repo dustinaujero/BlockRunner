@@ -1,23 +1,22 @@
 document.addEventListener("DOMContentLoaded", () => {
-    var scene, camera, renderer, cube, floor, spotLight;
+    var scene, camera, renderer, cube, spotLight;
     var cubeDY, cubeDX;
     var frame;
     var keyboard = {};
     var cubes = [];
+    var yLevels = [0, -1, -1.5, -2, -2.5];
     var game;
-    var counter = 0;
+    
     const init = () => {
 
         scene = new THREE.Scene();
         camera = new THREE.PerspectiveCamera(50, 1200/720, 0.1, 1000);
         frame = 0;
-
         camera.position.set(0, 5, 10);
-        // camera.lookAt(new THREE.Vector3(0,-5, -5));
-        // camera.lookAt(new THREE.Vector3(0, -20, -100));
+
 
         const shape = new THREE.BoxGeometry(0.5, 0.5, 0.5);
-        const material = new THREE.MeshStandardMaterial({ color: 0xffffff});
+        const material = new THREE.MeshStandardMaterial({ color: 0xFF0000});
         cube = new THREE.Mesh(shape, material);
 
         cube.position.set(0, -1.5, 0);
@@ -119,8 +118,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
         if (++frame % 10 == 0) {
+
             renderNewCube();
-            renderNewCube2();
+            renderNewCube();
             renderBar();
         }
 
@@ -166,19 +166,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const box = new THREE.Mesh(shape, material);
         cubes.push(box);
         const xCord = (Math.random() * 12) - 6;
-        box.position.set(xCord, -2.5, -50);
-        box.castShadow = true;
-        box.receiveShadow = true;
-        scene.add(box);
-    }
-    const renderNewCube2 = () => {
-
-        const shape = new THREE.BoxGeometry(1, 1, 1);
-        const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
-        const box = new THREE.Mesh(shape, material);
-        cubes.push(box);
-        const xCord = (Math.random() * 12) - 6;
-        box.position.set(xCord, 0, -50);
+        const ySample = yLevels[Math.floor(Math.random() * yLevels.length)];
+        box.position.set(xCord, ySample, -50);
         box.castShadow = true;
         box.receiveShadow = true;
         scene.add(box);
@@ -189,10 +178,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
             const box = new THREE.Mesh(shape, material);
             cubes.push(box);
-            const xLevels = [0, -1.5, -2.5];
-            const xSample = xLevels[Math.floor(Math.random() * xLevels.length)];
+            const ySample = yLevels[Math.floor(Math.random() * yLevels.length)];
             const xCord = (Math.random() * 12) - 6;
-            box.position.set(xCord, xSample, -50);
+            box.position.set(xCord, ySample, -50);
             box.castShadow = true;
             box.receiveShadow = true;
             scene.add(box);
