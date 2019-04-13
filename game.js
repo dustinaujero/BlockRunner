@@ -1,3 +1,5 @@
+
+
 document.addEventListener("DOMContentLoaded", () => {
     var scene, camera, renderer, cube, spotLight;
     var cubeDY, cubeDX;
@@ -8,23 +10,23 @@ document.addEventListener("DOMContentLoaded", () => {
     var game;
     
     const init = () => {
-
         scene = new THREE.Scene();
+
+        //CAMERA
         camera = new THREE.PerspectiveCamera(50, 1200/720, 0.1, 1000);
+        camera.position.set(0, 5, 7);
         frame = 0;
-        camera.position.set(0, 5, 10);
+        //CAMERA
 
-
+        //PLAYER
         const shape = new THREE.BoxGeometry(0.5, 0.5, 0.5);
         const material = new THREE.MeshStandardMaterial({ color: 0xFF0000});
         cube = new THREE.Mesh(shape, material);
-
         cube.position.set(0, -1.5, 0);
         cube.castShadow = true;
         cube.receiveShadow = true;
-        
         scene.add(cube);
-
+        //PLAYER
        
 
         const floor = new THREE.Mesh(
@@ -118,7 +120,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
         if (++frame % 10 == 0) {
-
             renderNewCube();
             renderNewCube();
             renderBar();
@@ -135,7 +136,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         cube.position.x += cubeDX;
         camera.position.x = cube.position.x * 0.2;
-        camera.position.y = cube.position.y * 0.4 ;
+        camera.position.y = cube.position.y * 0.4 ;        
+        cubes.forEach( cube => {
+            if(cube.position.z >= 5) {
+                scene.remove(cube)
+            } else {
+                cube.position.z += 0.5;
+            }
+        });
         var originPoint = cube.position.clone();
         for (var vertexIndex = 0; vertexIndex < cube.geometry.vertices.length; vertexIndex++) {
             var localVertex = cube.geometry.vertices[vertexIndex].clone();
@@ -148,13 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 cancelAnimationFrame(game);
         }
 
-        cubes.forEach( cube => {
-            if(cube.position.z >= 5) {
-                scene.remove(cube)
-            } else {
-                cube.position.z += 0.5;
-            }
-        });
+
         
         renderer.render(scene, camera);
     }
