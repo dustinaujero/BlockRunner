@@ -1,8 +1,8 @@
 
 
 document.addEventListener("DOMContentLoaded", () => {
-    var scene, camera, renderer, cube, spotLight;
-    var cubeDY, cubeDX;
+    var scene, camera, renderer, player, spotLight;
+    var playerDY, playerDX;
     var frame;
     var keyboard = {};
     var cubes = [];
@@ -14,18 +14,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         //CAMERA
         camera = new THREE.PerspectiveCamera(50, 1200/720, 0.1, 1000);
-        camera.position.set(0, 5, 7);
+        camera.position.set(0, 5, 5);
         frame = 0;
         //CAMERA
 
         //PLAYER
         const shape = new THREE.BoxGeometry(0.5, 0.5, 0.5);
         const material = new THREE.MeshStandardMaterial({ color: 0xFF0000});
-        cube = new THREE.Mesh(shape, material);
-        cube.position.set(0, -1.5, 0);
-        cube.castShadow = true;
-        cube.receiveShadow = true;
-        scene.add(cube);
+        player = new THREE.Mesh(shape, material);
+        player.position.set(0, -1.5, 0);
+        player.castShadow = true;
+        player.receiveShadow = true;
+        scene.add(player);
         //PLAYER
        
 
@@ -81,8 +81,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         scene.add(spotLight);
 
-        cubeDY = 0;
-        cubeDX = 0;
+        playerDY = 0;
+        playerDX = 0;
         renderer = new THREE.WebGLRenderer();
         renderer.setSize(1200, 720);
         renderer.physicallyCorrectLights = true;
@@ -94,71 +94,104 @@ document.addEventListener("DOMContentLoaded", () => {
     }   
 
     const animate = () => {
-        game = requestAnimationFrame(animate);
         
-        if (cube.position.y < -3) {
-            cube.position.y = -2.3;
+        
+        if (player.position.y < -3) {
+            player.position.y = -2.3;
         }
         if(keyboard[37]) { //LEFT
-            if(cube.position.x >= -6) {
-                cubeDX -= 0.025;
+            if(player.position.x >= -6) {
+                playerDX -= 0.025;
             }
         }
         if (keyboard[39]) { //RIGHT
-            if (cube.position.x <= 6) {
-                cubeDX += 0.025;
+            if (player.position.x <= 6) {
+                playerDX += 0.025;
             }
         }
         if (keyboard[38]) { //UP
-            if (cube.position.y <= 1) {
-                cube.position.y += 0.3;
-                cubeDY = 0.1;
+            if (player.position.y <= 1) {
+                player.position.y += 0.3;
+                playerDY = 0.1;
             }
         }
         if (keyboard[40]) { //DOWN
-            if (cube.position.y >= -2.5) {
+            if (player.position.y >= -2.5) {
             }
         }
-        if (++frame % 10 == 0) {
-            renderNewCube();
-            renderNewCube();
-            renderBar();
+        // if (++frame % 10 == 0) {
+        //     renderNewCube();
+        //     renderNewCube();
+        //     renderBar();
+        // }
+
+
+
+
+
+
+        playerDY -= 0.009;
+        playerDX *= 0.9;
+        if (player.position.y >= -2.5) {
+            player.position.y += playerDY;
+        }
+        player.position.x += playerDX;
+        camera.position.x = player.position.x * 0.4;
+        camera.position.y = player.position.y * 0.4 ;        
+
+
+        const playerPos = player.position.clone();
+        const playerXRange = [(player.geometry.vertices[0].x + playerPos.x), (player.geometry.vertices[4].x + playerPos.x)];
+        const playerYRange = [(player.geometry.vertices[0].y + playerPos.y), (player.geometry.vertices[2].y + playerPos.y)];
+        const playerZRange = [(player.geometry.vertices[0].z + playerPos.z), (player.geometry.vertices[1].z + playerPos.z)];
+
+        game = requestAnimationFrame(animate);
+        if (++frame % 240 == 0) {
+            console.log(playerXRange);
+            console.log(playerYRange);
+            console.log(playerZRange);
+
+        }
+        if (frame % 600 == 0) {
+            cancelAnimationFrame(game);
         }
 
-
-
-
-
-        cubeDY -= 0.009;
-        cubeDX *= 0.9;
-        if (cube.position.y >= -2.5) {
-            cube.position.y += cubeDY;
-        }
-        cube.position.x += cubeDX;
-        camera.position.x = cube.position.x * 0.2;
-        camera.position.y = cube.position.y * 0.4 ;        
         cubes.forEach( cube => {
             if(cube.position.z >= 5) {
-                scene.remove(cube)
+                scene.remove(cube);
+
+
             } else {
                 cube.position.z += 0.5;
+                
+                //PLAYER POSITION RANGE
+                // console.log(player.geometry.vertices)
+
+                //PLAYER POSITION RANGE
+
             }
         });
-        var originPoint = cube.position.clone();
-        for (var vertexIndex = 0; vertexIndex < cube.geometry.vertices.length; vertexIndex++) {
-            var localVertex = cube.geometry.vertices[vertexIndex].clone();
-            var globalVertex = localVertex.applyMatrix4(cube.matrix);
-            var directionVector = globalVertex.sub(cube.position);
-
-            var ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
-            var collisionResults = ray.intersectObjects(cubes);
-            if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length())
-                cancelAnimationFrame(game);
-        }
-
 
         
+        // const originPoint = player.position.clone();
+
+        // for (let vertexIndex = 0; vertexIndex < player.geometry.vertices.length; vertexIndex++) {
+        //     const localVertex = player.geometry.vertices[vertexIndex].clone();
+        //     const globalVertex = localVertex.applyMatrix4(player.matrix);
+        //     const directionVector = globalVertex.sub(player.position);
+        //     const ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
+        //     const collisionResults = ray.intersectObjects(cubes);
+        //     if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
+        //         console.log(collisionResults[0].object.name);
+        //         cancelAnimationFrame(game);
+        //         collisionResults[0].object.material.transparent = true;
+        //         collisionResults[0].object.material.opacity = 0.4;
+        //         collisionResults[0].object.material.color.setHex(0xFF0000);
+        //     }
+        // }
+        
         renderer.render(scene, camera);
+        
     }
 
     const renderNewCube = () => {
