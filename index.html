@@ -14,6 +14,8 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            background-color: black;
+            color: rgb(189, 189, 189);
         }
 
         canvas {
@@ -25,28 +27,37 @@
             flex-direction: row;
             width: 400px;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            background-color: gray;
+            box-shadow: 0px 0px 6px 12px gray;
+            padding: 6px;
+            border-radius: 15px;
+        }
+        .diff-menu:hover {
+            background-color: transparent;
+            box-shadow: none;
         }
         .diff-option {
             padding: 5px 10px;
             border-radius: 5px;
-            background-color: green;
         }
-        .easy {
+        .easy:hover {
             background-color: green;
             color: white;
         }
-        .medium {
+        .medium:hover {
             background-color: yellow;
+            color: black;
         }
-        .hard {
+        .hard:hover {
             background-color: red;
+            color: black;
         }
-        .insane {
+        .insane:hover {
             background-color: purple;
             color: white;
         }
-        .legendary {
+        .legendary:hover {
             background-color: blue;
             color: white;
         }
