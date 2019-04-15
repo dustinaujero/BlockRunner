@@ -1,4 +1,4 @@
-
+import {setupCamera, setupPlayer, setupLight, setupMap } from './components/setup_game';
 
 document.addEventListener("DOMContentLoaded", () => {
     var scene, camera, renderer, player, spotLight;
@@ -10,76 +10,12 @@ document.addEventListener("DOMContentLoaded", () => {
     var game;
     
     const init = () => {
-        scene = new THREE.Scene();
-
-        //CAMERA
-        camera = new THREE.PerspectiveCamera(50, 1200/720, 0.1, 1000);
-        camera.position.set(0, 5, 5);
         frame = 0;
-        //CAMERA
-
-        //PLAYER
-        const shape = new THREE.BoxGeometry(0.5, 0.5, 0.5);
-        const material = new THREE.MeshStandardMaterial({ color: 0xFF0000});
-        player = new THREE.Mesh(shape, material);
-        player.position.set(0, -1.5, 0);
-        player.castShadow = true;
-        player.receiveShadow = true;
-        scene.add(player);
-        //PLAYER
-       
-
-        const floor = new THREE.Mesh(
-            new THREE.PlaneGeometry(15, 250), new THREE.MeshStandardMaterial({ color: 0xC8C8C8 })
-        );
-        floor.rotation.x -= Math.PI / 2;
-        floor.position.set(0, -3.1, 0);
-        floor.receiveShadow = true;
-        floor.castShadow = true;
-        scene.add(floor);
-
-
-        const rightWall = new THREE.Mesh(
-            new THREE.PlaneGeometry(15, 250), new THREE.MeshStandardMaterial({ color: 0xffffff, wireframe: false})
-        );
-        rightWall.rotation.x -= Math.PI / 2;
-        rightWall.rotation.y -= Math.PI / 2;
-        rightWall.position.set(7, -2, 0);
-        rightWall.receiveShadow = true;
-        rightWall.castShadow = true;
-        scene.add(rightWall);
-
-
-        const leftWall = new THREE.Mesh(
-            new THREE.PlaneGeometry(15, 250), new THREE.MeshStandardMaterial({ color: 0xC8C8C8, wireframe: false})
-        );
-        leftWall.rotation.x -= Math.PI / 2;
-        leftWall.rotation.y += Math.PI / 2;
-        leftWall.position.set(-7, -2, 0);
-        leftWall.receiveShadow = true;
-        leftWall.castShadow = true;
-        scene.add(leftWall);
-
-
-
-        let ambientLight = new THREE.AmbientLight(0xffffff, 1, 0, 0.1, 0, 1);
-        scene.add(ambientLight);
-
-        spotLight = new THREE.SpotLight(0xffffff, 50, 0, 0.3, 0, 1);
-        spotLight.position.set(0, 5, 15);
-        
-        spotLight.castShadow = true;
-        spotLight.shadow.mapSize.width = 1024;
-        spotLight.shadow.mapSize.height = 1024;
-
-
-
-        spotLight.shadow.camera.near = 0.0;
-        spotLight.shadow.camera.far = -4000;
-
-        spotLight.lookAt(new THREE.Vector3(0, 5, 0));
-
-        scene.add(spotLight);
+        scene = new THREE.Scene();
+        camera = setupCamera();
+        player = setupPlayer(scene);
+        setupMap(scene);
+        spotLight = setupLight(scene, false);
 
         playerDY = 0;
         playerDX = 0;
@@ -110,48 +46,18 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
         if (keyboard[38]) { //UP
-            if (player.position.y <= 1) {
+            if (player.position.y <= 0) {
                 player.position.y += 0.3;
-                playerDY = 0.1;
+                playerDY = 0.09;
             }
         }
         if (keyboard[40]) { //DOWN
             if (player.position.y >= -2.5) {
             }
         }
-        if (++frame % 10 == 0) {
-            renderNewCube();
-            renderNewCube();
-            renderBar();
-        }
-
-
-
-
-
-
-        playerDY -= 0.009;
-        playerDX *= 0.9;
-        if (player.position.y >= -2.5) {
-            player.position.y += playerDY;
-        }
-        player.position.x += playerDX;
-        camera.position.x = player.position.x * 0.4;
-        camera.position.y = player.position.y * 0.4 ;        
-
-
-        // const playerPos = player.position.clone();
-        // const playerXRange = [(player.geometry.vertices[0].x + playerPos.x), (player.geometry.vertices[4].x + playerPos.x)];
-        // const playerYRange = [(player.geometry.vertices[0].y + playerPos.y), (player.geometry.vertices[2].y + playerPos.y)];
-        // const playerZRange = [(player.geometry.vertices[0].z + playerPos.z), (player.geometry.vertices[1].z + playerPos.z)];
-
-        game = requestAnimationFrame(animate);
-
-
-        cubes.forEach( cube => {
-            if(cube.position.z >= 5) {
+        cubes.forEach(cube => {
+            if (cube.position.z >= 5) {
                 scene.remove(cube);
-
 
             } else {
                 // const cubePos = cube.position.clone();
@@ -173,12 +79,59 @@ document.addEventListener("DOMContentLoaded", () => {
                 //         }
                 // });
 
-
-                cube.position.z += 0.5;
+                if (frame > 3000) {
+                    cube.position.z += 0.65;
+                }
+                else {
+                    cube.position.z += 0.5;
+                }
             }
         });
+        // PHASE 1
+        if (++frame % 10 == 0) renderNewCube();
 
+        // PHASE 2
+        if (frame > 600 && frame % 10 == 0) renderNewCube();
+
+        // PHASE 3
+        if (frame > 1200 && frame % 10 == 0) renderBar();
+
+        // PHASE 4
+        if (frame > 1800 && frame % 10 == 0) renderNewSphere();
+
+        // after 50 sec, more chaos
+        if (frame > 3000) {
+            camera.rotation.z = -player.position.x * 0.07;
+            spotLight.position.x = player.position.x;
+        };
+
+        // remove cubes from array after 6 sec
+        if (frame > 360 && frame % 10 == 0) {
+            cubes.shift();
+        }
+
+
+
+
+
+        playerDY -= 0.009;
+        playerDX *= 0.9;
+        if (player.position.y >= -2.5) {
+            player.position.y += playerDY;
+        }
+        player.position.x += playerDX;
+        camera.position.x = player.position.x * 0.4;
+        camera.position.y = player.position.y * 0.4 ;
         
+
+
+        // const playerPos = player.position.clone();
+        // const playerXRange = [(player.geometry.vertices[0].x + playerPos.x), (player.geometry.vertices[4].x + playerPos.x)];
+        // const playerYRange = [(player.geometry.vertices[0].y + playerPos.y), (player.geometry.vertices[2].y + playerPos.y)];
+        // const playerZRange = [(player.geometry.vertices[0].z + playerPos.z), (player.geometry.vertices[1].z + playerPos.z)];
+
+        // collision detection
+        game = requestAnimationFrame(animate);
         const originPoint = player.position.clone();
 
         for (let vertexIndex = 0; vertexIndex < player.geometry.vertices.length; vertexIndex++) {
@@ -188,12 +141,19 @@ document.addEventListener("DOMContentLoaded", () => {
             const ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
             const collisionResults = ray.intersectObjects(cubes);
             
-            if (collisionResults.length === 1 && collisionResults[0].distance < directionVector.length()) {
+            if (collisionResults.length === 1 
+                && 
+                collisionResults[0].distance < directionVector.length()
+                && 
+                collisionResults[0].object.position.z > -0.25
+                ) {
                 debugger
-                cancelAnimationFrame(game);
                 collisionResults[0].object.material.transparent = true;
                 collisionResults[0].object.material.opacity = 0.4;
                 collisionResults[0].object.material.color.setHex(0xFF0000);
+                
+                cancelAnimationFrame(game);
+
             }
         }
         
@@ -213,6 +173,20 @@ document.addEventListener("DOMContentLoaded", () => {
         box.castShadow = true;
         box.receiveShadow = true;
         scene.add(box);
+    }
+    const renderNewSphere = () => {
+        if (Math.random() >= 0.7) {
+            const shape = new THREE.SphereGeometry(0.5);
+            const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+            const sphere = new THREE.Mesh(shape, material);
+            cubes.push(sphere);
+            const xCord = (Math.random() * 12) - 6;
+            const ySample = yLevels[Math.floor(Math.random() * yLevels.length)];
+            sphere.position.set(xCord, ySample, -50);
+            sphere.castShadow = true;
+            sphere.receiveShadow = true;
+            scene.add(sphere);
+        }
     }
     const renderBar = () => {
         if (Math.random() >= 0.95) {
@@ -237,6 +211,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     window.addEventListener('keydown', keyDown);
     window.addEventListener('keyup', keyUp);
-
     init();
 })
