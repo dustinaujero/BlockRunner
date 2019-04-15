@@ -20,6 +20,11 @@
             width: 100%;
             height: 100%;
         }
+        .diff-menu {
+            display: flex;
+            flex-direction: row;
+
+        }
     </style>
     <script src="three.js"></script>
     <script src="bundle.js"></script>
@@ -28,6 +33,12 @@
 <body>
     <h1>BLOCK RUNNER</h1> 
     <h3>Use the arrow keys to avoid obstacles</h3>
+    <div class="diff-menu">
+        <div onClick="window.game.animate()">Easy</div>
+        <div onClick="window.game.animate()">Medium</div>
+        <div onClick="window.game.animate()">Hard</div>
+
+    </div>
     <button value="Refresh Page" onClick="window.location.reload()">Play Again</button>
 
 
