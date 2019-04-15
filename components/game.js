@@ -36,15 +36,12 @@ class Game {
     }
     animate() {
         // PLAYER MOVEMENT
-        if (this.player.position.y < -3) {
-            this.player.position.y = -2.3;
-        }
         if (this.keyboard[37] === true 
             || 
             this.keyboard[65] === true
             ) { //LEFT
             if (this.player.position.x >= -3) {
-                this.playerDX -= 0.020;
+                this.playerDX -= 0.020 + (this.diffSetting * 0.005);
             }
         }
         if (this.keyboard[39] === true
@@ -52,7 +49,7 @@ class Game {
             this.keyboard[68] === true
             ) { //RIGHT
             if (this.player.position.x <= 3) {
-                this.playerDX += 0.020;
+                this.playerDX += 0.020 + (this.diffSetting * 0.005);
             }
         }
         if (this.keyboard[38] === true 
@@ -61,7 +58,7 @@ class Game {
             ) { //UP
             if (this.player.position.y <= 0) {
                 this.player.position.y += 0.3;
-                this.playerDY = 0.09;
+                this.playerDY = 0.09 + (this.diffSetting * 0.005);
             }
         }
         if (this.keyboard[40] === true 
@@ -69,7 +66,7 @@ class Game {
             this.keyboard[83] === true
             ) { //DOWN
             if (this.player.position.y >= -2.5) {
-                this.player.position.y -= 0.2;
+                this.player.position.y -= 0.2 + (this.diffSetting * 0.005);
             }
         }
         // PLAYER MOVEMENT
@@ -120,7 +117,7 @@ class Game {
                     }
                 }
                 if (this.frame > 3000) {
-                    cube.position.z += 0.65;
+                    cube.position.z += 0.3;
                 }
                 if (this.frame > 5400) {
                     cube.position.z += 0.3;
@@ -153,11 +150,11 @@ class Game {
         }
 
         // X FRICTION
-        this.playerDX *= 0.9;
+        this.playerDX *= 0.9 + (this.diffSetting * 0.005);
 
 
         // GRAVITY
-        this.playerDY -= 0.009;
+        this.playerDY -= 0.009 + (this.diffSetting * 0.005);
         
         if (this.player.position.y >= -2.5) {
             this.player.position.y += this.playerDY;
