@@ -35,7 +35,7 @@ class Game {
         this.animate = this.animate.bind(this);
     }
     animate() {
-
+        // PLAYER MOVEMENT
         if (this.player.position.y < -3) {
             this.player.position.y = -2.3;
         }
@@ -57,8 +57,12 @@ class Game {
         }
         if (this.keyboard[40]) { //DOWN
             if (this.player.position.y >= -2.5) {
+                this.player.position.y -= 0.2;
             }
         }
+        // PLAYER MOVEMENT
+
+        // CUBE MOVEMENT
         this.cubes.forEach(cube => {
             if (cube.position.z >= 5) {
                 this.scene.remove(cube);
@@ -90,6 +94,8 @@ class Game {
                 }
             }
         });
+        // CUBE MOVEMENT
+
         // PHASE 1
         if (++this.frame % 10 == 0) this.renderNewCube();
 
@@ -113,15 +119,18 @@ class Game {
             this.cubes.shift();
         }
 
-
-
-
-
-        this.playerDY -= 0.009;
+        // X FRICTION
         this.playerDX *= 0.9;
+
+
+        // GRAVITY
+        this.playerDY -= 0.009;
+        
         if (this.player.position.y >= -2.5) {
             this.player.position.y += this.playerDY;
         }
+
+        // CAMERA FOLLOWS PLAYER
         this.player.position.x += this.playerDX;
         this.camera.position.x = this.player.position.x * 0.4;
         this.camera.position.y = this.player.position.y * 0.4;
