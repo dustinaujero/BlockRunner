@@ -119,11 +119,11 @@ document.addEventListener("DOMContentLoaded", () => {
             if (player.position.y >= -2.5) {
             }
         }
-        // if (++frame % 10 == 0) {
-        //     renderNewCube();
-        //     renderNewCube();
-        //     renderBar();
-        // }
+        if (++frame % 10 == 0) {
+            renderNewCube();
+            renderNewCube();
+            renderBar();
+        }
 
 
 
@@ -140,21 +140,21 @@ document.addEventListener("DOMContentLoaded", () => {
         camera.position.y = player.position.y * 0.4 ;        
 
 
-        const playerPos = player.position.clone();
-        const playerXRange = [(player.geometry.vertices[0].x + playerPos.x), (player.geometry.vertices[4].x + playerPos.x)];
-        const playerYRange = [(player.geometry.vertices[0].y + playerPos.y), (player.geometry.vertices[2].y + playerPos.y)];
-        const playerZRange = [(player.geometry.vertices[0].z + playerPos.z), (player.geometry.vertices[1].z + playerPos.z)];
+        // const playerPos = player.position.clone();
+        // const playerXRange = [(player.geometry.vertices[0].x + playerPos.x), (player.geometry.vertices[4].x + playerPos.x)];
+        // const playerYRange = [(player.geometry.vertices[0].y + playerPos.y), (player.geometry.vertices[2].y + playerPos.y)];
+        // const playerZRange = [(player.geometry.vertices[0].z + playerPos.z), (player.geometry.vertices[1].z + playerPos.z)];
 
         game = requestAnimationFrame(animate);
-        if (++frame % 240 == 0) {
-            console.log(playerXRange);
-            console.log(playerYRange);
-            console.log(playerZRange);
+        // if (++frame % 240 == 0) {
+        //     console.log(playerXRange);
+        //     console.log(playerYRange);
+        //     console.log(playerZRange);
 
-        }
-        if (frame % 600 == 0) {
-            cancelAnimationFrame(game);
-        }
+        // }
+        // if (frame % 600 == 0) {
+        //     cancelAnimationFrame(game);
+        // }
 
         cubes.forEach( cube => {
             if(cube.position.z >= 5) {
@@ -162,33 +162,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
             } else {
+                // const cubePos = cube.position.clone();
+                // const cubeVertPos = cube.geometry.vertices.map( vertex => {
+                //     vertex.x += cubePos.x;
+                //     vertex.y += cubePos.y;
+                //     vertex.z += cubePos.z;
+                // });
+                // debugger
+                // cubeVertPos.forEach(vertex => {
+                //     if (
+                //         vertex.x > playerXRange[0] && vertex.x < playerXRange[1] 
+                //         &&
+                //         vertex.y > playerYRange[0] && vertex.y < playerYRange[1]
+                //         &&
+                //         vertex.z > playerZRange[0] && vertex.z < plyaerZRange[1]
+                //         ) {
+                //             alert("game over");
+                //         }
+                // });
+
+
                 cube.position.z += 0.5;
-                
-                //PLAYER POSITION RANGE
-                // console.log(player.geometry.vertices)
-
-                //PLAYER POSITION RANGE
-
             }
         });
 
         
-        // const originPoint = player.position.clone();
+        const originPoint = player.position.clone();
 
-        // for (let vertexIndex = 0; vertexIndex < player.geometry.vertices.length; vertexIndex++) {
-        //     const localVertex = player.geometry.vertices[vertexIndex].clone();
-        //     const globalVertex = localVertex.applyMatrix4(player.matrix);
-        //     const directionVector = globalVertex.sub(player.position);
-        //     const ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
-        //     const collisionResults = ray.intersectObjects(cubes);
-        //     if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
-        //         console.log(collisionResults[0].object.name);
-        //         cancelAnimationFrame(game);
-        //         collisionResults[0].object.material.transparent = true;
-        //         collisionResults[0].object.material.opacity = 0.4;
-        //         collisionResults[0].object.material.color.setHex(0xFF0000);
-        //     }
-        // }
+        for (let vertexIndex = 0; vertexIndex < player.geometry.vertices.length; vertexIndex++) {
+            const localVertex = player.geometry.vertices[vertexIndex].clone();
+            const globalVertex = localVertex.applyMatrix4(player.matrix);
+            const directionVector = globalVertex.sub(player.position);
+            const ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
+            const collisionResults = ray.intersectObjects(cubes);
+            if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
+                cancelAnimationFrame(game);
+                collisionResults[0].object.material.transparent = true;
+                collisionResults[0].object.material.opacity = 0.4;
+                collisionResults[0].object.material.color.setHex(0xFF0000);
+            }
+        }
         
         renderer.render(scene, camera);
         
