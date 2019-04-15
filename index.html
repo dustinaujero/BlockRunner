@@ -23,7 +23,24 @@
         .diff-menu {
             display: flex;
             flex-direction: row;
-
+            width: 300px;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .diff-option {
+            padding: 5px 10px;
+            border-radius: 5px;
+            background-color: green;
+        }
+        .easy {
+            background-color: green;
+            color: white;
+        }
+        .medium {
+            background-color: yellow;
+        }
+        .hard {
+            background-color: red;
         }
     </style>
     <script src="three.js"></script>
@@ -33,13 +50,11 @@
 <body>
     <h1>BLOCK RUNNER</h1> 
     <h3>Use the arrow keys to avoid obstacles</h3>
-    <div class="diff-menu">
-        <div onClick="window.newGame().animate()">Easy</div>
-        <div onClick="window.newGame().animate()">Medium</div>
-        <div onClick="window.newGame().animate()">Hard</div>
-
+    <div class="diff-menu"> 
+        <div class="diff-option easy" onClick="window.newGame().animate()">Easy</div>
+        <div class="diff-option medium" onClick="window.newGame().animate()">Medium</div>
+        <div class="diff-option hard" onClick="window.newGame().animate()">Hard</div>
     </div>
-    <button value="Refresh Page" onClick="window.location.reload()">Play Again</button>
 
 
 </body>
