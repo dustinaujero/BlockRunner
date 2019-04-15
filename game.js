@@ -146,15 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // const playerZRange = [(player.geometry.vertices[0].z + playerPos.z), (player.geometry.vertices[1].z + playerPos.z)];
 
         game = requestAnimationFrame(animate);
-        // if (++frame % 240 == 0) {
-        //     console.log(playerXRange);
-        //     console.log(playerYRange);
-        //     console.log(playerZRange);
 
-        // }
-        // if (frame % 600 == 0) {
-        //     cancelAnimationFrame(game);
-        // }
 
         cubes.forEach( cube => {
             if(cube.position.z >= 5) {
@@ -195,7 +187,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const directionVector = globalVertex.sub(player.position);
             const ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
             const collisionResults = ray.intersectObjects(cubes);
-            if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()) {
+            
+            if (collisionResults.length === 1 && collisionResults[0].distance < directionVector.length()) {
+                debugger
                 cancelAnimationFrame(game);
                 collisionResults[0].object.material.transparent = true;
                 collisionResults[0].object.material.opacity = 0.4;
