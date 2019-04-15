@@ -39,23 +39,35 @@ class Game {
         if (this.player.position.y < -3) {
             this.player.position.y = -2.3;
         }
-        if (this.keyboard[37]) { //LEFT
+        if (this.keyboard[37] === true 
+            || 
+            this.keyboard[65] === true
+            ) { //LEFT
             if (this.player.position.x >= -3) {
                 this.playerDX -= 0.020;
             }
         }
-        if (this.keyboard[39]) { //RIGHT
+        if (this.keyboard[39] === true
+            || 
+            this.keyboard[68] === true
+            ) { //RIGHT
             if (this.player.position.x <= 3) {
                 this.playerDX += 0.020;
             }
         }
-        if (this.keyboard[38]) { //UP
+        if (this.keyboard[38] === true 
+            || 
+            this.keyboard[87] === true
+            ) { //UP
             if (this.player.position.y <= 0) {
                 this.player.position.y += 0.3;
                 this.playerDY = 0.09;
             }
         }
-        if (this.keyboard[40]) { //DOWN
+        if (this.keyboard[40] === true 
+            || 
+            this.keyboard[83] === true
+            ) { //DOWN
             if (this.player.position.y >= -2.5) {
                 this.player.position.y -= 0.2;
             }
@@ -103,7 +115,7 @@ class Game {
                         break;
                     }
                     case 5: {
-                        cube.position.z += 1.7
+                        cube.position.z += 1.7;
                         break;
                     }
                 }
