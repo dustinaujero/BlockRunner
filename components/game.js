@@ -9,12 +9,12 @@ class Game {
     // let yLevels = [0, -1, -1.5, -2, -2.5];----------
     // let game;
 
-    constructor() {
+    constructor(diffSetting) {
         this.frame = 0;
         this.keyboard = {};
         this.cubes = [];
         this.yLevels = [0, -1, -1.5, -2, -2.5];
-        
+        this.diffSetting = diffSetting
 
 
         this.scene = new THREE.Scene();
