@@ -23,7 +23,7 @@
         .diff-menu {
             display: flex;
             flex-direction: row;
-            width: 300px;
+            width: 400px;
             justify-content: space-between;
             margin-bottom: 10px;
         }
@@ -42,6 +42,14 @@
         .hard {
             background-color: red;
         }
+        .insane {
+            background-color: purple;
+            color: white;
+        }
+        .legendary {
+            background-color: blue;
+            color: white;
+        }
     </style>
     <script src="three.js"></script>
     <script src="bundle.js"></script>
@@ -54,6 +62,8 @@
         <div class="diff-option easy" onClick="window.newGame(1).animate()">Easy</div>
         <div class="diff-option medium" onClick="window.newGame(2).animate()">Medium</div>
         <div class="diff-option hard" onClick="window.newGame(3).animate()">Hard</div>
+        <div class="diff-option insane" onClick="window.newGame(4).animate()">Insane</div>
+        <div class="diff-option legendary" onClick="window.newGame(4).animate()">Legendary</div>
     </div>
 
 

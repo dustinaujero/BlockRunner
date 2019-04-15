@@ -14,7 +14,7 @@ class Game {
         this.keyboard = {};
         this.cubes = [];
         this.yLevels = [0, -1, -1.5, -2, -2.5];
-        this.diffSetting = diffSetting
+        this.diffSetting = diffSetting;
 
 
         this.scene = new THREE.Scene();
@@ -40,12 +40,12 @@ class Game {
             this.player.position.y = -2.3;
         }
         if (this.keyboard[37]) { //LEFT
-            if (this.player.position.x >= -2) {
+            if (this.player.position.x >= -3) {
                 this.playerDX -= 0.020;
             }
         }
         if (this.keyboard[39]) { //RIGHT
-            if (this.player.position.x <= 2) {
+            if (this.player.position.x <= 3) {
                 this.playerDX += 0.020;
             }
         }
@@ -85,12 +85,33 @@ class Game {
                 //             alert("game over");
                 //         }
                 // });
-
+                switch (this.diffSetting) {
+                    case 1: {
+                        cube.position.z += 0.5;
+                        break;
+                    }
+                    case 2: {
+                        cube.position.z += 0.8;
+                        break;
+                    }
+                    case 3: {
+                        cube.position.z += 1;
+                        break;
+                    }
+                    case 4: {
+                        cube.position.z += 1.3;
+                        break;
+                    }
+                    case 5: {
+                        cube.position.z += 1.7
+                        break;
+                    }
+                }
                 if (this.frame > 3000) {
                     cube.position.z += 0.65;
                 }
-                else {
-                    cube.position.z += 0.5;
+                if (this.frame > 5400) {
+                    cube.position.z += 0.3;
                 }
             }
         });
