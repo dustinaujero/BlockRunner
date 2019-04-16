@@ -9,7 +9,7 @@ class Game {
     // let yLevels = [0, -1, -1.5, -2, -2.5];----------
     // let game;
 
-    constructor(diffSetting) {
+    constructor(diffSetting, windowWidth) {
         this.frame = 0;
         this.keyboard = {};
         this.cubes = [];
@@ -25,7 +25,7 @@ class Game {
         this.playerDY = 0;
         this.playerDX = 0;
         this.renderer = new THREE.WebGLRenderer();
-        this.renderer.setSize(1200, 720);
+        this.renderer.setSize(windowWidth*0.8, (windowWidth*0.45));
         this.renderer.physicallyCorrectLights = true;
         document.body.appendChild(this.renderer.domElement);
 
@@ -33,6 +33,7 @@ class Game {
         window.addEventListener('keyup', this.keyUp.bind(this));
 
         this.animate = this.animate.bind(this);
+
     }
     animate() {
         // PLAYER MOVEMENT
