@@ -26,7 +26,7 @@ class Game {
         this.playerDX = 0;
         this.renderer = new THREE.WebGLRenderer();
         // this.renderer.setSize(windowWidth*0.7, (windowWidth*0.40));
-        this.renderer.setSize(1200, 700);
+        this.renderer.setSize(900, 525);
         this.renderer.physicallyCorrectLights = true;
         document.body.appendChild(this.renderer.domElement);
         window.addEventListener('keydown', this.keyDown.bind(this));
@@ -181,6 +181,36 @@ class Game {
                     name: name,
                     score: this.score
                 })
+                const scores = [];
+                const list = document.createElement('ul');
+                const highscores = document.getElementById("highscores");
+                const oldList = highscores.childNodes[1];
+
+                const compare = (b, a) => {
+                    if (a.score < b.score) {
+                        return -1;
+                    }
+                    if (a.score > b.score) {
+                        return 1;
+                    }
+                    return 0;
+                }
+
+                database.ref().orderByChild("score").limitToLast(3).on("value", function (snapshot) {
+                    snapshot.forEach(function (childSnapshot) {
+                        const name = childSnapshot.val().name;
+                        const score = childSnapshot.val().score;
+                        scores.push({ name, score });
+                    });
+                    scores.sort(compare);
+                    for (let i = 0; i <= scores.length - 1; i++) {
+                        const listItem = document.createElement("li");
+                        listItem.innerHTML = `${i + 1}. ` + " " + scores[i].name + " - " + scores[i].score;
+
+                        list.appendChild(listItem);
+                    }
+                })
+                highscores.replaceChild(list, oldList);
                 collisionDetected = false;
             }
         }

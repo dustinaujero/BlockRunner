@@ -172,35 +172,7 @@
     </div>
     <div id="score">Score: </div>
     <script>
-        const scores = [];
-        const list = document.createElement('ul');
-        const highscores = document.getElementById("highscores");
-        const oldList = highscores.childNodes[1];
-        const compare = (b, a) => {
-                if (a.score < b.score) {
-                    return -1;
-                }
-                if (a.score > b.score) {
-                    return 1;
-                }
-                return 0;
-        }
 
-        database.ref().orderByChild("score").limitToLast(3).on("value", function (snapshot) {
-            snapshot.forEach(function (childSnapshot) {
-                var name = childSnapshot.val().name;
-                var score = childSnapshot.val().score;
-                scores.push({ name, score });
-            });
-            scores.sort(compare);
-            for (let i = 0; i <= scores.length - 1; i++) {
-                var listItem = document.createElement("li");
-                listItem.innerHTML = `${i + 1}. ` + " " + scores[i].name + " - " + scores[i].score;
-
-                list.appendChild(listItem);
-            }
-        })
-        highscores.replaceChild(list, oldList);
     </script>
 </body>
 
