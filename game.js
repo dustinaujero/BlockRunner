@@ -3,7 +3,7 @@ import Game from './components/game';
 document.addEventListener("DOMContentLoaded", () => {
     window.game = new Game();
     window.newGame = (diffSetting) => {
-        document.body.removeChild(document.body.children[5]);
+        document.body.removeChild(document.body.children[7]);
         const game = new Game(diffSetting, window.innerWidth);
         return game;
     }

@@ -4,6 +4,9 @@
 <head>
     <meta charset=utf-8>
     <title>BlockRunner</title>
+    <link rel='icon' href='cube.ico' type='image/x-icon'/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
     <style>
         body {
             margin: 0;
@@ -91,22 +94,53 @@
         .instructions img {
             margin: 5px 10px;
             width: 60px;
+        }
+        #highscores {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #highscores > ul {
+            list-style: none;
+            padding-left: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        #highscores > ul > li {
+            margin-right: 15px;
+        }
+        #highscores > ul > li:first-of-type {
+            color: rgba(255, 217, 0, 0.747);
+        }
+        #highscores > ul:nth-child(1) {
+            color: rgba(192, 192, 192, 0.541);
+        }
+        #highscores > ul > li:last-of-type {
+            color: rgba(255, 127, 80, 0.603);
+        }
 
-        }
-        canvas {
-            position: relative;
-        }
-        .score {
-            position: absolute;
-            top: 10px;
-        }
     </style>
     <!-- <script src="https://www.gstatic.com/firebasejs/5.10.0/firebase.js"></script> -->
+    <script src="https://www.gstatic.com/firebasejs/5.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.10.0/firebase-database.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCoIxc_K2Dop9VMXS4B6qhBUyDnuQBQ33c",
+            authDomain: "blockrunner-8c971.firebaseapp.com",
+            databaseURL: "https://blockrunner-8c971.firebaseio.com",
+            projectId: "blockrunner-8c971",
+            storageBucket: "blockrunner-8c971.appspot.com",
+            messagingSenderId: "1032613884407"
+        };
+        firebase.initializeApp(config);
+        const database = firebase.database();
+    </script>
     <script src="three.js"></script>
     <script src="bundle.js"></script>
-    <link rel='icon' href='cube.ico' type='image/x-icon'/>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
-        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    
 </head>
 
 <body>
@@ -131,8 +165,43 @@
         <div class="diff-option insane" onClick="window.newGame(4).animate()">Insane</div>
         <div class="diff-option legendary" onClick="window.newGame(5).animate()">Legendary</div>
     </div>
-    <div class="score">Score: </div>
+    <div id="highscores">Highest Scores: 
+        <ul>
 
+        </ul>
+    </div>
+    <div id="score">Score: </div>
+    <script>
+        const scores = [];
+        const list = document.createElement('ul');
+        const highscores = document.getElementById("highscores");
+        const oldList = highscores.childNodes[1];
+        const compare = (b, a) => {
+                if (a.score < b.score) {
+                    return -1;
+                }
+                if (a.score > b.score) {
+                    return 1;
+                }
+                return 0;
+        }
+
+        database.ref().orderByChild("score").limitToLast(3).on("value", function (snapshot) {
+            snapshot.forEach(function (childSnapshot) {
+                var name = childSnapshot.val().name;
+                var score = childSnapshot.val().score;
+                scores.push({ name, score });
+            });
+            scores.sort(compare);
+            for (let i = 0; i <= scores.length - 1; i++) {
+                var listItem = document.createElement("li");
+                listItem.innerHTML = `${i + 1}. ` + " " + scores[i].name + " - " + scores[i].score;
+
+                list.appendChild(listItem);
+            }
+        })
+        highscores.replaceChild(list, oldList);
+    </script>
 </body>
 
 </html>

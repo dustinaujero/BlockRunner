@@ -17,6 +17,7 @@
         "@babel/preset-env": "^7.3.4",
         "@babel/preset-react": "^7.0.0",
         "babel-loader": "^8.0.5",
+        "firebase": "^5.10.0",
         "simplex-noise": "^2.4.0",
         "three": "^0.103.0",
         "three-orbitcontrols": "^2.102.1"

@@ -15,8 +15,8 @@ class Game {
         this.cubes = [];
         this.yLevels = [0, -1, -1.5, -2, -2.5];
         this.diffSetting = diffSetting;
-
-
+        this.score = 0;
+        this.uiScore = document.getElementById("score");
         this.scene = new THREE.Scene();
         this.camera = setupCamera();
         this.player = setupPlayer(this.scene);
@@ -25,10 +25,10 @@ class Game {
         this.playerDY = 0;
         this.playerDX = 0;
         this.renderer = new THREE.WebGLRenderer();
-        this.renderer.setSize(windowWidth*0.7, (windowWidth*0.40));
+        // this.renderer.setSize(windowWidth*0.7, (windowWidth*0.40));
+        this.renderer.setSize(1200, 700);
         this.renderer.physicallyCorrectLights = true;
         document.body.appendChild(this.renderer.domElement);
-
         window.addEventListener('keydown', this.keyDown.bind(this));
         window.addEventListener('keyup', this.keyUp.bind(this));
 
@@ -77,24 +77,6 @@ class Game {
             if (cube.position.z >= 5) {
                 this.scene.remove(cube);
             } else {
-                // const cubePos = cube.position.clone();
-                // const cubeVertPos = cube.geometry.vertices.map( vertex => {
-                //     vertex.x += cubePos.x;
-                //     vertex.y += cubePos.y;
-                //     vertex.z += cubePos.z;
-                // });
-                // debugger
-                // cubeVertPos.forEach(vertex => {
-                //     if (
-                //         vertex.x > playerXRange[0] && vertex.x < playerXRange[1] 
-                //         &&
-                //         vertex.y > playerYRange[0] && vertex.y < playerYRange[1]
-                //         &&
-                //         vertex.z > playerZRange[0] && vertex.z < plyaerZRange[1]
-                //         ) {
-                //             alert("game over");
-                //         }
-                // });
                 switch (this.diffSetting) {
                     case 1: {
                         cube.position.z += 0.5;
@@ -125,6 +107,12 @@ class Game {
                 }
             }
         });
+        //SCORE
+        if (this.frame % 60 === 0) {
+            this.uiScore.innerHTML = `Score: ${this.score++}`
+        }
+        //SCORE
+
         // CUBE MOVEMENT
 
         // PHASE 1
@@ -166,16 +154,10 @@ class Game {
         this.camera.position.x = this.player.position.x * 0.4;
         this.camera.position.y = this.player.position.y * 0.4;
 
-
-
-        // const playerPos = player.position.clone();
-        // const playerXRange = [(player.geometry.vertices[0].x + playerPos.x), (player.geometry.vertices[4].x + playerPos.x)];
-        // const playerYRange = [(player.geometry.vertices[0].y + playerPos.y), (player.geometry.vertices[2].y + playerPos.y)];
-        // const playerZRange = [(player.geometry.vertices[0].z + playerPos.z), (player.geometry.vertices[1].z + playerPos.z)];
-
         // collision detection
         const game = requestAnimationFrame(this.animate);
         const originPoint = this.player.position.clone();
+        let collisionDetected = true;
         for (let vertexIndex = 0; vertexIndex < this.player.geometry.vertices.length; vertexIndex++) {
             const localVertex = this.player.geometry.vertices[vertexIndex].clone();
             const globalVertex = localVertex.applyMatrix4(this.player.matrix);
@@ -187,11 +169,19 @@ class Game {
                 collisionResults[0].distance < directionVector.length()
                 &&
                 collisionResults[0].object.position.z > -0.25
+                &&
+                collisionDetected
             ) {
                 collisionResults[0].object.material.transparent = true;
                 collisionResults[0].object.material.opacity = 0.4;
                 collisionResults[0].object.material.color.setHex(0xFF0000);
                 cancelAnimationFrame(game);
+                const name = prompt("What is your name?");
+                database.ref().push({
+                    name: name,
+                    score: this.score
+                })
+                collisionDetected = false;
             }
         }
         this.renderer.render(this.scene, this.camera);
