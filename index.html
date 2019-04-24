@@ -25,11 +25,12 @@
         .diff-menu {
             display: flex;
             flex-direction: row;
-            width: 400px;
+            width: 500px;
             justify-content: space-between;
             margin-bottom: 15px;
-            background-color: gray;
-            box-shadow: 0px 0px 6px 12px gray;
+            /* background-color: rgba(128, 128, 128, 0.424); */
+            background-color: inherit;
+            /* box-shadow: 0px 0px 6px 12px rgba(128, 128, 128, 0.424); */
             padding: 6px;
             border-radius: 15px;
         }
@@ -37,9 +38,20 @@
             background-color: transparent;
             box-shadow: none;
         }
+        /* .diff-menu > div:first-of-type {
+            width: 200px;
+
+        } */
         .diff-option {
             padding: 5px 10px;
             border-radius: 5px;
+        }
+        /* input:checked > div {
+            color: black;
+        } */
+        input:checked .diff-menu .diff-option{
+            background-color: inherit;
+            box-shadow: none;
         }
         .easy:hover {
             background-color: green;
@@ -61,24 +73,65 @@
             background-color: blue;
             color: white;
         }
+        .links {
+            display: flex;
+            flex-direction: row;
+            color: white;
+            width: 80px;
+            justify-content: space-between;
+        }
+        .links div .fab{
+            color: white;
+        }
+        .instructions {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        .instructions img {
+            margin: 5px 10px;
+            width: 60px;
+
+        }
+        canvas {
+            position: relative;
+        }
+        .score {
+            position: absolute;
+            top: 10px;
+        }
     </style>
-    <script src="https://www.gstatic.com/firebasejs/5.10.0/firebase.js"></script>
+    <!-- <script src="https://www.gstatic.com/firebasejs/5.10.0/firebase.js"></script> -->
     <script src="three.js"></script>
     <script src="bundle.js"></script>
     <link rel='icon' href='cube.ico' type='image/x-icon'/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
 </head>
 
 <body>
     <h1>BLOCK RUNNER</h1> 
-    <h3>Use the arrow keys to avoid obstacles</h3>
+    <div class="links">
+        <div><a href='https://github.com/dustinaujero' target="_blank"><i class="fab fa-github"></i></a></div>
+        <div><a href='https://www.linkedin.com/in/dustin-a-0aab33127/' target="_blank"><i class="fab fa-linkedin"></i></a></div>
+        <div><a href='https://angel.co/dustin-aujero' target="_blank"><i class="fab fa-angellist"></i></a></div>
+    </div>
+    <div class="instructions">
+        Use 
+        <img src="arrows.png" alt="arrow keys">
+        or
+        <img src="wasd.png" alt="wasd keys">
+        to avoid obstacles
+    </div>
     <div class="diff-menu"> 
+        <div class="diff-option" >Choose a difficulty: </div>
         <div class="diff-option easy" onClick="window.newGame(1).animate()">Easy</div>
         <div class="diff-option medium" onClick="window.newGame(2).animate()">Medium</div>
         <div class="diff-option hard" onClick="window.newGame(3).animate()">Hard</div>
         <div class="diff-option insane" onClick="window.newGame(4).animate()">Insane</div>
-        <div class="diff-option legendary" onClick="window.newGame(4).animate()">Legendary</div>
+        <div class="diff-option legendary" onClick="window.newGame(5).animate()">Legendary</div>
     </div>
-
+    <div class="score">Score: </div>
 
 </body>
 

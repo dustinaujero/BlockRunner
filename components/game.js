@@ -25,7 +25,7 @@ class Game {
         this.playerDY = 0;
         this.playerDX = 0;
         this.renderer = new THREE.WebGLRenderer();
-        this.renderer.setSize(windowWidth*0.8, (windowWidth*0.45));
+        this.renderer.setSize(windowWidth*0.7, (windowWidth*0.40));
         this.renderer.physicallyCorrectLights = true;
         document.body.appendChild(this.renderer.domElement);
 
