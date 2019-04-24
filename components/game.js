@@ -1,13 +1,6 @@
 import { setupCamera, setupPlayer, setupLight, setupMap } from './game_setup';
 
 class Game {
-    // let scene, camera, renderer, player, spotLight;-
-    // let playerDY, playerDX;-------------------------
-    // let frame;--------------------------------------
-    // let keyboard = {};------------------------------
-    // let cubes = [];---------------------------------
-    // let yLevels = [0, -1, -1.5, -2, -2.5];----------
-    // let game;
 
     constructor(diffSetting, windowWidth) {
         this.frame = 0;
