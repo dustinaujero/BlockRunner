@@ -13,10 +13,13 @@ class Game {
         this.scene = new THREE.Scene();
         this.camera = setupCamera();
         this.player = setupPlayer(this.scene);
+        this.player2 = setupPlayer(this.scene, true);
         setupMap(this.scene);
         this.spotLight = setupLight(this.scene, false);
         this.playerDY = 0;
         this.playerDX = 0;
+        this.player2DY = 0;
+        this.player2DX = 0;
         this.renderer = new THREE.WebGLRenderer();
         // this.renderer.setSize(windowWidth*0.7, (windowWidth*0.40));
         this.renderer.setSize(900, 525);
@@ -26,29 +29,24 @@ class Game {
         window.addEventListener('keyup', this.keyUp.bind(this));
 
         this.animate = this.animate.bind(this);
-
+        this.detectCollision =  this.detectCollision.bind(this);
     }
     animate() {
+        debugger
         // PLAYER MOVEMENT
         if (this.keyboard[37] === true 
-            || 
-            this.keyboard[65] === true
             ) { //LEFT
             if (this.player.position.x >= -3) {
                 this.playerDX -= 0.020 + (this.diffSetting * 0.005);
             }
         }
         if (this.keyboard[39] === true
-            || 
-            this.keyboard[68] === true
             ) { //RIGHT
             if (this.player.position.x <= 3) {
                 this.playerDX += 0.020 + (this.diffSetting * 0.005);
             }
         }
         if (this.keyboard[38] === true 
-            || 
-            this.keyboard[87] === true
             ) { //UP
             if (this.player.position.y <= 0) {
                 this.player.position.y += 0.3;
@@ -56,11 +54,40 @@ class Game {
             }
         }
         if (this.keyboard[40] === true 
-            || 
-            this.keyboard[83] === true
             ) { //DOWN
             if (this.player.position.y >= -2.5) {
                 this.player.position.y -= 0.2 + (this.diffSetting * 0.005);
+            }
+        }
+
+        //PLAYER2
+        if (
+            this.keyboard[65] === true
+        ) { //LEFT
+            if (this.player2.position.x >= -3) {
+                this.player2DX -= 0.020 + (this.diffSetting * 0.005);
+            }
+        }
+        if (
+            this.keyboard[68] === true
+        ) { //RIGHT
+            if (this.player2.position.x <= 3) {
+                this.player2DX += 0.020 + (this.diffSetting * 0.005);
+            }
+        }
+        if (
+            this.keyboard[87] === true
+        ) { //UP
+            if (this.player2.position.y <= 0) {
+                this.player2.position.y += 0.3;
+                this.player2DY = 0.09 + (this.diffSetting * 0.005);
+            }
+        }
+        if (
+            this.keyboard[83] === true
+        ) { //DOWN
+            if (this.player2.position.y >= -2.5) {
+                this.player2.position.y -= 0.2 + (this.diffSetting * 0.005);
             }
         }
         // PLAYER MOVEMENT
@@ -133,28 +160,39 @@ class Game {
 
         // X FRICTION
         this.playerDX *= 0.9 + (this.diffSetting * 0.005);
+        this.player2DX *= 0.9 + (this.diffSetting * 0.005);
 
 
         // GRAVITY
         this.playerDY -= 0.009 + (this.diffSetting * 0.005);
+        this.player2DY -= 0.009 + (this.diffSetting * 0.005);
         
         if (this.player.position.y >= -2.5) {
             this.player.position.y += this.playerDY;
         }
+        if (this.player2.position.y >= -2.5) {
+            this.player2.position.y += this.player2DY;
+        }
 
         // CAMERA FOLLOWS PLAYER
         this.player.position.x += this.playerDX;
-        this.camera.position.x = this.player.position.x * 0.4;
-        this.camera.position.y = this.player.position.y * 0.4;
+        this.player2.position.x += this.player2DX;
+        this.camera.position.x = ((this.player.position.x) + (this.player2.position.x) / 2) * 0.4;
+        this.camera.position.y = ((this.player.position.y) + (this.player2.position.x) / 2) * 0.4;
 
         // collision detection
         const game = requestAnimationFrame(this.animate);
-        const originPoint = this.player.position.clone();
+        this.detectCollision(this.player, game);
+        this.detectCollision(this.player2, game);
+        this.renderer.render(this.scene, this.camera);
+    }
+    detectCollision(player, game) {
+        const originPoint = player.position.clone();
         let collisionDetected = true;
-        for (let vertexIndex = 0; vertexIndex < this.player.geometry.vertices.length; vertexIndex++) {
-            const localVertex = this.player.geometry.vertices[vertexIndex].clone();
-            const globalVertex = localVertex.applyMatrix4(this.player.matrix);
-            const directionVector = globalVertex.sub(this.player.position);
+        for (let vertexIndex = 0; vertexIndex < player.geometry.vertices.length; vertexIndex++) {
+            const localVertex = player.geometry.vertices[vertexIndex].clone();
+            const globalVertex = localVertex.applyMatrix4(player.matrix);
+            const directionVector = globalVertex.sub(player.position);
             const ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
             const collisionResults = ray.intersectObjects(this.cubes);
             if (collisionResults.length === 1
@@ -207,7 +245,6 @@ class Game {
                 collisionDetected = false;
             }
         }
-        this.renderer.render(this.scene, this.camera);
     }
     renderNewCube() {
 

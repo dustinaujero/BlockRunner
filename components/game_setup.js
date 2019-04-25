@@ -4,9 +4,15 @@ export const setupCamera = () => {
     return camera;
 };
 
-export const setupPlayer = (scene) => {
+export const setupPlayer = (scene, color) => {
     const shape = new THREE.BoxGeometry(0.5, 0.5, 0.5);
-    const material = new THREE.MeshStandardMaterial({ color: 0xFF0000 });
+    let material
+    if (color) {
+        material = new THREE.MeshStandardMaterial({ color: 0x008000 });
+    }
+    else {
+        material = new THREE.MeshStandardMaterial({ color: 0xFF0000 });
+    }
     const player = new THREE.Mesh(shape, material);
     player.position.set(0, -1.5, 0);
     player.castShadow = true;
