@@ -2,33 +2,33 @@
 
 ### Background
 
-Blockrunner is an endless runner game that involves navigating through a field of randomly placed cubes until a collision occurs
+Largely inspired by Cube Runner, BlockRunner is 3D endless runner game where you compete to survive the longest. 
 
-### Functionality & MVP
+[Live Site](https://dustinaujero.github.io/BlockRunner/)
 
-Users will be able to use the arrow keys to roll left or right to avoid the cubes
+### How to Play
 
-### Wireframes
+* Use WASD or the arrow keys to move around.
+* Got a highscore? Save your name for all to see!
+* Don't get hit!
 
-This app will feature a single screen
+### Gameplay
+
+<a href="https://imgur.com/xAW4dkU"><img src="https://i.imgur.com/xAW4dkU.gif" title="source: imgur.com" /></a>
 
 ### Architecture and Technologies
 
-This project will implement: 
-* Three.js
+Three.js 
+* Render the 3D environment on the canvas 
+* Render game map
+* Create objects
 
-### Implementation Timeline
+Firebase
+* Store score information globally
 
-Day 1: Setup and learning Three.js 
 
-Day 2: Creating the game world and working on logic
+### Future Features
 
-Day 3: Finishing up the game world and refining physics
-
-Day 4: Working on UI and gameplay
-
-### Bonus Features
-
-Some bonus features to later implement include: 
- * Difficulty options
+Some features I plan to include:
+ * Better difficulty options
  * Theme options
