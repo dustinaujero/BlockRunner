@@ -1,6 +1,6 @@
 export const setupCamera = () => {
     const camera = new THREE.PerspectiveCamera(50, 1200 / 720, 0.1, 1000);
-    camera.position.set(0, 5, 5);
+    camera.position.set(0, -1, 5);
     return camera;
 };
 
