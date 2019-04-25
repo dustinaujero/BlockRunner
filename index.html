@@ -31,9 +31,10 @@
         }
         .diff-menu {
             display: flex;
-            flex-direction: row;
-            width: 500px;
+            flex-direction: column;
+            width: 420px;
             justify-content: space-between;
+            align-items: center;
             margin-bottom: 15px;
             /* background-color: rgba(128, 128, 128, 0.424); */
             background-color: inherit;
@@ -122,7 +123,11 @@
         #highscores > ul > li:last-of-type {
             color: rgba(255, 127, 80, 0.603);
         }
-
+        .diff-menu .player-amount {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
     </style>
     <!-- <script src="https://www.gstatic.com/firebasejs/5.10.0/firebase.js"></script> -->
     <script src="https://www.gstatic.com/firebasejs/5.10.0/firebase-app.js"></script>
@@ -163,11 +168,22 @@
     </div>
     <div class="diff-menu"> 
         <div class="diff-option" >Choose a difficulty to start a new game: </div>
-        <div class="diff-option easy" onClick="window.newGame(1).animate()">Easy</div>
-        <div class="diff-option medium" onClick="window.newGame(2).animate()">Medium</div>
-        <div class="diff-option hard" onClick="window.newGame(3).animate()">Hard</div>
-        <div class="diff-option insane" onClick="window.newGame(4).animate()">Insane</div>
-        <div class="diff-option legendary" onClick="window.newGame(1, true).animate()">Legendary</div>
+        <div class="player-amount">
+            <div class="diff-option">1 player: </div>
+            <div class="diff-option easy" onClick="window.newGame(1).animate()">Easy</div>
+            <div class="diff-option medium" onClick="window.newGame(2).animate()">Medium</div>
+            <div class="diff-option hard" onClick="window.newGame(3).animate()">Hard</div>
+            <div class="diff-option insane" onClick="window.newGame(4).animate()">Insane</div>
+            <div class="diff-option legendary" onClick="window.newGame(1).animate()">Legendary</div>
+        </div>
+        <div class="player-amount">
+            <div class="diff-option">2 player: </div>
+            <div class="diff-option easy" onClick="window.newGame(1, true).animate()">Easy</div>
+            <div class="diff-option medium" onClick="window.newGame(2, true).animate()">Medium</div>
+            <div class="diff-option hard" onClick="window.newGame(3, true).animate()">Hard</div>
+            <div class="diff-option insane" onClick="window.newGame(4, true).animate()">Insane</div>
+            <div class="diff-option legendary" onClick="window.newGame(1, true).animate()">Legendary</div>
+        </div>
     </div>
     <div id="highscores">Highest Scores: 
         <ul>
