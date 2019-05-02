@@ -3,9 +3,9 @@ var path = require('path');
 
 module.exports = {
     context: __dirname,
-    entry: './game.js',
+    entry: './lib/game.js',
     output: {
-        path: path.join(__dirname),
+        path: path.join(__dirname, 'lib'),
         filename: './bundle.js',
     },
     module: {

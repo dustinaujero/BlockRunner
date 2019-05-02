@@ -4,7 +4,7 @@
 <head>
     <meta charset=utf-8>
     <title>BlockRunner</title>
-    <link rel='icon' href='cube.ico' type='image/x-icon'/>
+    <link rel='icon' href='./assets/images/cube.ico' type='image/x-icon'/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
         integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
     <style>
@@ -22,9 +22,9 @@
         }
         @font-face {
             font-family: 'CubeFont';
-            src:  url('cube.woff2') format('woff2'),
-                url('Cube.ttf')  format('truetype'),
-            url('cube.woff') format('woff');
+            src:  url('./assets/font/cube.woff2') format('woff2'),
+                url('./assets/font/Cube.ttf')  format('truetype'),
+            url('./assets/font/cube.woff') format('woff');
         }
         h1 {
             font-family: 'CubeFont', sans-serif;
@@ -147,8 +147,8 @@
         firebase.initializeApp(config);
         const database = firebase.database();
     </script>
-    <script src="three.js"></script>
-    <script src="bundle.js"></script>
+    <script src="./lib/three.js"></script>
+    <script src="./lib/bundle.js"></script>
     
 </head>
 
@@ -161,9 +161,9 @@
     </div>
     <div class="instructions">
         Use 
-        <img src="arrows.png" alt="arrow keys">
+        <img src="./assets/images/arrows.png" alt="arrow keys">
         or
-        <img src="wasd.png" alt="wasd keys">
+        <img src="./assets/images/wasd.png" alt="wasd keys">
         to avoid obstacles
     </div>
     <div class="diff-menu"> 
